@@ -1,0 +1,13 @@
+The lowest level of data is:
+
+a list of x, y, z coordinates
+each with an expression value
+for each gene...
+
+
+Gene:
+	-coordinates: [(value)]
+
+Genes List:
+http://help.brain-map.org/download/attachments/2818165/HBA_ISH_GeneList.pdf?version=1&modificationDate=1348783035873
+

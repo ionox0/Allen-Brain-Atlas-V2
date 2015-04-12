@@ -1,0 +1,31 @@
+http://api.brain-map.org/api/v2/data/query.xml? \
+  criteria=model::Structure, \
+  rma::criteria,[name$il'thalamus'], \
+  ontology[name$eq'Human Brain Atlas'], \
+  rma::options[only$eq'structures.id']
+
+curl "http://api.brain-map.org/api/v2/data/query.xml?criteria=model::Structure,rma::criteria,[name$il\'thalamus\'],ontology[name$eq\'Human\ Brain\ Atlas\'],rma::options[only$eq\'structures.id\']" -v
+
+curl 'http://api.brain-map.org/api/v2/data/query.xml?criteria\=model::Structure,rma::criteria,\[name$il'thalamus'\],ontology\[name$eq\'Human\ Brain\ Atlas'\],rma::options\[only$eq'structures.id'\]' -v
+
+curl -g http://api.brain-map.org/grid_data/download/[SectionDataSet.id]&include=[volumes]
+
+curl -g http://api.brain-map.org/grid_data/download/69816930?include=intensity,density
+
+curl "http://api.brain-map.org/api/v2/data/Chromosome/12.json"
+
+
+
+-> Download expression values for donor "H0351.1015" in structure "locus ceruleus" for all probes associated with gene SLC6A.
+
+Find Donor ID for "H0351.1015" (id = 15496)
+curl -g 'http://api.brain-map.org/api/v2/data/query.xml?criteria=model::Donor,rma::criteria,[name$eq'H0351.1015'],rma::options[only$eq'donors.id']'
+
+Find Structure ID for "locus ceruleus" (id = 9148)
+curl -g 'http://api.brain-map.org/api/v2/data/query.json?criteria=model::Structure,rma::criteria,[name$il'locus\ ceruleus'],ontology[name$eq'Human\ Brain\ Atlas'],rma::options[only$eq'structures.id']'
+
+Find Probes associated with gene SLC6A2 (id = 1023146,1023147 )
+curl -g 'http://api.brain-map.org/api/v2/data/query.xml?criteria=model::Probe,rma::criteria,[probe_type$eq'DNA'],products[abbreviation$eq'HumanMA'],gene[acronym$eq'SLC6A2'],rma::options[only$eq'probes.id']'
+
+Use Donor, Structure and Probe IDs as parameters to the connected service
+curl -g 'http://api.brain-map.org/api/v2/data/query.json?criteria=service::human_microarray_expression[probes$eq1023146,1023147][donors$eq15496][structures$eq9148]'

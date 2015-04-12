@@ -1,0 +1,16 @@
+body {
+  margin: 0; }
+
+#main {
+  position: relative;
+  width: 100%;
+  height: 100%; }
+  #main canvas {
+    width: 100%;
+    height: 100%; }
+  #main #gene-entry {
+    position: absolute;
+    left: 3%;
+    top: 10%; }
+
+/*# sourceMappingURL=main.css.map */

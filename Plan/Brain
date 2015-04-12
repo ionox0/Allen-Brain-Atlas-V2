@@ -1,0 +1,40 @@
+Brain Model
+
+-telencephelon
+  -cortex
+    -frontal lobe
+      -primiary sensory cotrex
+      -motor cortex
+    -parietal lobe
+      -2º motor area
+    -temporal lobe
+      -auditory cortex
+    -occipital lobe
+    -insula
+
+-diencephelon
+  -amygdala
+  -hippocampus
+    -CA1
+    -CA2
+    -CA3
+  -corpus callosum
+    -gneu
+    -splenium
+  -thalamus
+    -...
+  -hypothalamus
+  -mamillary body
+  -globus pallidus
+    -gpe
+    -gpi
+  -internal capsule
+  -putamen
+  -caudate nucleus
+
+-mesencephelon
+-metencephelon
+  -pons
+  -VTA
+-mylencephelon
+  -medulla

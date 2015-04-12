@@ -1,0 +1,19 @@
+{
+  "name": "Allen_Brain_Atlas",
+  "version": "2.0.0",
+  "description": "Visualizer for Allen Brain Institute data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ionox0",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-sass": "^0.18.1",
+    "load-grunt-tasks": "^3.1.0",
+    "sass": "^0.5.0"
+  }
+}
