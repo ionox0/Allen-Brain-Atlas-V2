@@ -12,8 +12,8 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: ['app/**/*.js', 'app/**/*.scss', 'app/**/*.html'],
-      tasks: ['jshint', 'sass'],
+      files: ['app/js/*.js', 'app/**/*.scss', 'app/**/*.html'],
+      tasks: ['jshint', 'sass', 'browserify'],
       options: {
         livereload: true,
       },
@@ -27,12 +27,19 @@ module.exports = function(grunt) {
           'app/styles/main.css': 'app/styles/main.scss'
         }
       }
+    },
+    browserify: {
+      dist: {
+        src: ['app/js/main.js'],
+        dest: 'app/dist/bundle.js'
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-browserify');
 
-  grunt.registerTask('default', ['jshint', 'sass', 'watch']);
+  grunt.registerTask('default', ['jshint', 'sass', 'browserify', 'watch']);
 
 };
