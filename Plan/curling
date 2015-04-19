@@ -19,7 +19,7 @@ curl "http://api.brain-map.org/api/v2/data/Chromosome/12.json"
 -> Download expression values for donor "H0351.1015" in structure "locus ceruleus" for all probes associated with gene SLC6A.
 
 Find Donor ID for "H0351.1015" (id = 15496)
-curl -g 'http://api.brain-map.org/api/v2/data/query.xml?criteria=model::Donor,rma::criteria,[name$eq'H0351.1015'],rma::options[only$eq'donors.id']'
+curl -g "http://api.brain-map.org/api/v2/data/query.xml?criteria=model::Donor,rma::criteria,[name$eq'H0351.1015'],rma::options[only$eq'donors.id']"
 
 Find Structure ID for "locus ceruleus" (id = 9148)
 curl -g 'http://api.brain-map.org/api/v2/data/query.json?criteria=model::Structure,rma::criteria,[name$il'locus\ ceruleus'],ontology[name$eq'Human\ Brain\ Atlas'],rma::options[only$eq'structures.id']'

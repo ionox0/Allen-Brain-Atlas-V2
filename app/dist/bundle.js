@@ -34,8 +34,8 @@ module.exports = {
 		var url = "http://api.brain-map.org/api/v2/data/query.json" +
 			"?criteria=" +
 			  "service::human_microarray_expression" +
-				  "[probes$eq" + probeId + "]" +
-				  "[donors$eq15496]";
+				  "[probes$eq" + probeId + "]";
+				  //"[donors$eq15496]";
 				  // "[structures$eq9148]";
 		return $.ajax({
 		  url: url
@@ -43,22 +43,31 @@ module.exports = {
 	}
 
 };
-},{"underscore":3}],2:[function(require,module,exports){
+},{"underscore":4}],2:[function(require,module,exports){
 var abaApi = require("./abaApi.js");
 var _ = require("underscore");
-
-var scene, renderer, camera, controls, brain;
+var utils = require("./utils");
 
 init();
 render();
 
 function init(){
-  createScene();
-  createRenderer();
-  addCamera();
-  addControls();
+  scene = new THREE.Scene();
+  renderer = new THREE.WebGLRenderer({maxLights: 8});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  $('#main').append(renderer.domElement);
+  //Camera :
+  var height = 100;
+  var width = 100;
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
+  //camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
+  camera.position.set(150, 0, 0);
+  scene.add(camera);
+  // Controls:
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+
   addLights();
-  addBrain();
+  //addBrain();
 }
 
 function render() {
@@ -66,66 +75,21 @@ function render() {
   renderer.render(scene, camera);
 }
 
-// Scene:
-function createScene(){
-  scene = new THREE.Scene();
-}
-
-// Renderer:
-function createRenderer(){
-  renderer = new THREE.WebGLRenderer({maxLights: 8});
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  $('#main').append(renderer.domElement);
-}
-
-// Camera:
-function addCamera(){
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
-  camera.position.set(50, 50, 50);
-  scene.add(camera);
-}
-
-// Controls:
-function addControls(){
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
-}
-  
 // Lights:
 function addLights(){
   var sphereSize = 1;
-  // var neg1 = 1;
-  // var neg2 = -1;
-  // for (i = 0; i < 4; i++) {
-  //   var light = new THREE.PointLight(0xfffff3, 0.8);
-  //   var pointLightHelper = new THREE.PointLightHelper(light, sphereSize);
-  //   light.position.set(10 * neg, 10 * neg, 10 * neg);
-  //   scene.add(light);
-  //   scene.add( pointLightHelper );
-  // }
-  var light = new THREE.PointLight(0xfffff3, 0.8);
-  light.position.set(10, 10, 10);
+  var light = new THREE.PointLight(0xFF0000, 0.8);
+  light.position.set(10, 0, 0);
   scene.add(light);
-  var light2 = new THREE.PointLight(0xd7f0ff, 0.2);
-  light2.position.set(-10, 10, 10);
+  var light2 = new THREE.PointLight(0x00FF00, 0.8);
+  light2.position.set(-10, 0, 0);
   scene.add(light2);
-  var light3 = new THREE.PointLight(0xFFFFFF, 0.5);
-  light3.position.set(10, -10, 10);
+  var light3 = new THREE.PointLight(0x0000FF, 0.8);
+  light3.position.set(0, 10, 0);
   scene.add(light3);
-  var light4 = new THREE.PointLight(0xFFFFFF, 0.5);
-  light4.position.set(10, 10, -10);
+  var light4 = new THREE.PointLight(0xFFFFFF, 0.8);
+  light4.position.set(0, -10, 0);
   scene.add(light4);
-  var light5 = new THREE.PointLight(0xfffff3, 0.8);
-  light5.position.set(10, 10, 10);
-  scene.add(light5);
-  var light6 = new THREE.PointLight(0xd7f0ff, 0.2);
-  light6.position.set(-10, 10, 10);
-  scene.add(light6);
-  var light7 = new THREE.PointLight(0xFFFFFF, 0.5);
-  light7.position.set(10, -10, 10);
-  scene.add(light7);
-  var light8 = new THREE.PointLight(0xFFFFFF, 0.5);
-  light8.position.set(10, 10, -10);
-  scene.add(light8);
 
   // LightHelpers:
   var pointLightHelper = new THREE.PointLightHelper(light, sphereSize); 
@@ -136,21 +100,13 @@ function addLights(){
   scene.add(pointLightHelper3);
   var pointLightHelper4 = new THREE.PointLightHelper(light4, sphereSize); 
   scene.add(pointLightHelper4);
-  var pointLightHelper5 = new THREE.PointLightHelper(light5, sphereSize); 
-  scene.add(pointLightHelper5);
-  var pointLightHelper6 = new THREE.PointLightHelper(light6, sphereSize); 
-  scene.add(pointLightHelper6);
-  var pointLightHelper7 = new THREE.PointLightHelper(light7, sphereSize); 
-  scene.add(pointLightHelper7);
-  var pointLightHelper8 = new THREE.PointLightHelper(light8, sphereSize); 
-  scene.add(pointLightHelper8);
 }
   
 function addBrain(){
   try {
     brain = PinaCollada('brain2', 1);
   } catch (err) {
-    console.error("Error creating brain model: " + err);
+    console.error("Error adding brain model: " + err);
   }
 }
 
@@ -165,7 +121,7 @@ function PinaCollada(modelname, scale) {
   var loader = new THREE.ColladaLoader();
   var localObject;
   loader.options.convertUpAxis = true;
-  loader.load( 'dae-models/' + modelname + '.dae', function( collada ) {
+  loader.load('dae-models/' + modelname + '.dae', function(collada) {
     localObject = collada.scene;
     localObject.scale.x = localObject.scale.y = localObject.scale.z = scale;
     localObject.updateMatrix();
@@ -177,88 +133,102 @@ function PinaCollada(modelname, scale) {
 }
 
 (function(){
+  document.getElementById("gene-entry").focus();
   //Listen for 'return' in gene-entry field:
   $("#gene-entry").keyup(function (e) {
     if (e.keyCode == 13) {
-      var geneAcronym = $('#gene-entry').val();
+      var geneAcronym = $('#gene-entry').val().toUpperCase();
       var exprVals = abaApi.getExpressionData(geneAcronym, parseExpressionData);
     }
   });
 
-  function parseExpressionData(exprVals) {
-    console.log("BUILDEXPRESSIONCLOUD", exprVals);
+  function parseExpressionData(exprData) {
+    console.log("BUILDEXPRESSIONCLOUD", exprData);
 
     //exprVals.msg.probes[0].expression_level - Expression levels
     //exprVals.msg.samples[x].sample.mri - [x,y,z] coordinates
 
-    var exprVals2 = exprVals.msg.probes[0].expression_level;
-    var coordinates = _.pluck(exprVals.msg.samples, 'sample');
+    var exprVals2 = exprData.msg.probes[0].expression_level;
+    var coordinates = _.pluck(exprData.msg.samples, 'sample');
     var coordinates2 = _.pluck(coordinates, 'mri');
-    console.log(exprVals2);
-    console.log(coordinates2);
     buildExpressionCloud(exprVals2, coordinates2);
   }
 
   function buildExpressionCloud(exprVals, coordinates) {
-    var expressionPoints = new THREE.Geometry();
+    // Exprvals.length should equal coordinates.length:
+    console.log(exprVals.length, exprVals);
+    console.log(coordinates.length, coordinates);
 
-    //For finding correction factors:
-    var min0 = 1000;
-    var min1 = 1000;
-    var min2 = 1000;
-    var max0 = 0;
-    var max1 = 0;
-    var max2 = 0;
-    for (var i = 0; i < exprVals.length; i++){
-      if (coordinates[i][0] < min0) {
-        min0 = coordinates[i][0];
-      }
-      if (coordinates[i][1] < min1) {
-        min1 = coordinates[i][1];
-      }
-      if (coordinates[i][2] < min2) {
-        min2 = coordinates[i][2];
-      }
-      if (coordinates[i][0] > max0) {
-        max0 = coordinates[i][0];
-      }
-      if (coordinates[i][1] > max1) {
-        max1 = coordinates[i][1];
-      }
-      if (coordinates[i][2] > max2) {
-        max2 = coordinates[i][2];
-      }
-      expressionPoints.vertices.push(new THREE.Vector3(
-        coordinates[i][0] - 71,
-        coordinates[i][1] - 150,
-        coordinates[i][2] - 155
+    var xCorrection = -100;
+    var yCorrection = 100;
+    var zCorrection = -100;
+
+    var brainGeometry = new THREE.Geometry();
+    for (var i = 0; i < coordinates.length; i++){
+      brainGeometry.vertices.push(new THREE.Vector3(
+        (coordinates[i][0]) + xCorrection,
+        -(coordinates[i][1]) + yCorrection,
+        (coordinates[i][2]) + zCorrection
       ));
     }
-
-    console.log(min0, min1, min2);
-    console.log(max0, max1, max2);
+    // Scaled down:
+    // for (var i = 0; i < exprVals.length; i++){
+    //   expressionPoints.vertices.push(new THREE.Vector3(
+    //     (coordinates[i][0] - 71)/4,
+    //     (coordinates[i][1] - 150)/4,
+    //     (coordinates[i][2] - 155)/4
+    //   ));
+    // }
 
     var material = new THREE.PointCloudMaterial({
-      color: 0x2255FF,
-      size: 1,
+      size: 0.1,
       blending: THREE.AdditiveBlending,
-      transparent: true
+      transparent: true,
+      opacity: 0.7,
+      vertexColors: THREE.VertexColors
     });
 
-    object = new THREE.PointCloud(expressionPoints, material);
-    scene.add(object);
-    console.log(object);
+    var maxExpressionValue = 8;
+    var minExpressionValue = 0;
+
+    // Vertex colors
+    var colors = [];
+    for(var j = 0; j < brainGeometry.vertices.length; j++) {
+        colors[j] = new THREE.Color();
+        colors[j].setHSL(exprVals[j] / maxExpressionValue, 1.0, 0.5);
+    }
+    brainGeometry.colors = colors;
+
+    var brain = new THREE.PointCloud(brainGeometry, material);
+    brain.name = "brain";
+
+    // Remove last brain:
+    var selectedObject = scene.getObjectByName("brain");
+    scene.remove(selectedObject);
+    
+    scene.add(brain);
+    console.log(brain);
 
     var render = function () {
       requestAnimationFrame(render);
-      object.rotation.y += 0.01;
+      brain.rotation.y += 0.01;
       renderer.render(scene, camera);
     };
     render();
   }
 
 })();
-},{"./abaApi.js":1,"underscore":3}],3:[function(require,module,exports){
+},{"./abaApi.js":1,"./utils":3,"underscore":4}],3:[function(require,module,exports){
+exports.findMaxMin = function (data) {
+	var min = 1000;
+	var max = 0;
+	for (var i = 0; i < data.length; i++){
+		if (data[i] < min) min = data[i];
+		if (data[i] > max) max = data[i];
+	}
+	return [min, max];
+};
+},{}],4:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors

@@ -33,8 +33,8 @@ module.exports = {
 		var url = "http://api.brain-map.org/api/v2/data/query.json" +
 			"?criteria=" +
 			  "service::human_microarray_expression" +
-				  "[probes$eq" + probeId + "]" +
-				  "[donors$eq15496]";
+				  "[probes$eq" + probeId + "]";
+				  //"[donors$eq15496]";
 				  // "[structures$eq9148]";
 		return $.ajax({
 		  url: url
