@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "browserify": "^9.0.8",
+    "rsvp": "^3.0.18",
     "underscore": "^1.8.3"
   }
 }

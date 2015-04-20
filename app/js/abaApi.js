@@ -1,12 +1,13 @@
 var _ = require('underscore');
+var promise = require('./promise');
+var RSVP = require('rsvp');
 
 module.exports = {
-
 	getExpressionData: function(geneAcronym, callback) {
 		var thiz = this;
 		this.requestProbeId(geneAcronym).done(function(data) {
 	    thiz.requestExprVals(data.msg[0].id).done(function(data2) {
-	  		callback(data2);
+	  		return callback(data2);
 			});
 	  });
 	},
@@ -40,5 +41,4 @@ module.exports = {
 		  url: url
 		}); 
 	}
-
 };

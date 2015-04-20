@@ -11,3 +11,6 @@ Gene:
 Genes List:
 http://help.brain-map.org/download/attachments/2818165/HBA_ISH_GeneList.pdf?version=1&modificationDate=1348783035873
 
+HSL values to denote Expression Level:
+Hue is mesaured from 0º - 360º, or in Three.js on a scale from 0-1
+In this project, red represents lower expression values, purple higher
