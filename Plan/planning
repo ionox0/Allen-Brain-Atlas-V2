@@ -14,3 +14,11 @@ http://help.brain-map.org/download/attachments/2818165/HBA_ISH_GeneList.pdf?vers
 HSL values to denote Expression Level:
 Hue is mesaured from 0º - 360º, or in Three.js on a scale from 0-1
 In this project, red represents lower expression values, purple higher
+
+TODO:
+-promises
+-integrate with dae model
+-fill space somehow...
+-split out main.js
+-brain shell off/on
+-camera starts off center
