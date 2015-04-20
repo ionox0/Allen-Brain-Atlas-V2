@@ -18,7 +18,7 @@ In this project, red represents lower expression values, purple higher
 TODO:
 -promises
 -integrate with dae model
--fill space somehow...
+-fill space somehow
 -split out main.js
 -brain shell off/on
 -camera starts off center
