@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "connect": "^3.3.5",
+    "express": "^4.12.3",
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.7.0",
     "grunt-contrib-jshint": "^0.11.1",
