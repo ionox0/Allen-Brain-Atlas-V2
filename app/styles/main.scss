@@ -12,8 +12,19 @@ body {
     height: 100% 
   }
 
-  #gene-entry {
+  a {
     position: absolute;
+    left: 3%;
+    top: 5%;
+    color: grey;
+    font-family: "Lucida Console", Monaco, monospace;
+    text-decoration: none;
+  }
+
+  #gene-entry {
+    font-family: "Lucida Console", Monaco, monospace;
+    position: absolute;
+    width: 150px;
     left: 3%;
     top: 10%;
   }

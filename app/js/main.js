@@ -90,9 +90,14 @@ function PinaCollada(modelname, scale) {
 }
 
 (function(){
-  document.getElementById("gene-entry").focus();
+  var firstKey = true;
   //Listen for 'return' in gene-entry field:
   $("#gene-entry").keyup(function (e) {
+    firstKey = false;
+    if (firstKey === true && e.keyCode != (17|91)) {
+      console.log(e);
+      $('#gene-entry').val(String.fromCharCode(e.keyCode));
+    }
     if (e.keyCode == 13) {
       $("#spinner").css('display', 'block');
       var geneAcronym = $('#gene-entry').val().toUpperCase();

@@ -8,8 +8,17 @@ body {
   #main canvas {
     width: 100%;
     height: 100%; }
-  #main #gene-entry {
+  #main a {
     position: absolute;
+    left: 3%;
+    top: 5%;
+    color: grey;
+    font-family: "Lucida Console", Monaco, monospace;
+    text-decoration: none; }
+  #main #gene-entry {
+    font-family: "Lucida Console", Monaco, monospace;
+    position: absolute;
+    width: 150px;
     left: 3%;
     top: 10%; }
 
