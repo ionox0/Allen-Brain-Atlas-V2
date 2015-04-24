@@ -5,4 +5,4 @@ This project takes Microarray gene expression data from the Allen Institute and 
 Red-Violet scale represents the z-score expression values for the selected gene
 
 
-#######[Allen Institute for Brain Science, Seattle, WA](http://www.brain-map.org/)
+######[Allen Institute for Brain Science, Seattle, WA](http://www.brain-map.org/)
