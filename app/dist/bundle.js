@@ -67,8 +67,8 @@ function init(){
   // Controls:
   controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-  addLights();
-  addBrain();
+  //addLights();
+  //addBrain();
 }
 
 function render() {
@@ -78,18 +78,18 @@ function render() {
 
 // Lights:
 function addLights(){
-  var scale = 150;
+  var scale = 10;
   var sphereSize = 1;
-  var light = new THREE.PointLight(0xFFFFFF, 0.8);
+  var light = new THREE.PointLight(0xFF0000, 0.8);
   light.position.set(scale, 0, 0);
   scene.add(light);
-  var light2 = new THREE.PointLight(0xFFFFFF, 0.8);
+  var light2 = new THREE.PointLight(0x00FF00, 0.8);
   light2.position.set(-scale, 0, 0);
   scene.add(light2);
   var light3 = new THREE.PointLight(0xFFFFFF, 0.8);
   light3.position.set(0, scale, 0);
   scene.add(light3);
-  var light4 = new THREE.PointLight(0xFFFFFF, 0.8);
+  var light4 = new THREE.PointLight(0x0000FF, 0.8);
   light4.position.set(0, -scale, 0);
   scene.add(light4);
 
@@ -177,7 +177,7 @@ function buildExpressionCloud(exprVals, coordinates) {
   }
 
   var material = new THREE.PointCloudMaterial({
-    size: 0.2,
+    size: 0.5,
     blending: THREE.AdditiveBlending,
     transparent: true,
     opacity: 0.7,
@@ -207,7 +207,7 @@ function buildExpressionCloud(exprVals, coordinates) {
 
   var render = function () {
     requestAnimationFrame(render);
-    //brain.rotation.y += 0.01;
+    brain.rotation.y += 0.01;
     renderer.render(scene, camera);
   };
   render();

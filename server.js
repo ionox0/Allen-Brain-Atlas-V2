@@ -1,3 +1,9 @@
-var connect = require('connect');
-var serveStatic = require('serve-static');
-connect().use(serveStatic('./app')).listen(8080);
+var express = require('express'),
+  app       = express(),
+  port      = process.env.PORT || 3001;
+
+app.use(express.static(__dirname + '/build'));
+
+app.listen(port, function(){
+  console.log('listening on port ' + port);
+})
