@@ -17,11 +17,12 @@ function init(){
   camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
   //camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
   camera.position.set(150, 0, 0);
+  camera.lookAt(scene.position);
   scene.add(camera);
   // Controls:
   controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-  //addLights();
+  addLights();
   //addBrain();
 }
 
@@ -33,7 +34,7 @@ function render() {
 // Lights:
 function addLights(){
   var scale = 10;
-  var sphereSize = 1;
+  var sphereSize = 0.5;
   var light = new THREE.PointLight(0xFF0000, 0.8);
   light.position.set(scale, 0, 0);
   scene.add(light);
@@ -93,6 +94,7 @@ function PinaCollada(modelname, scale) {
   //Listen for 'return' in gene-entry field:
   $("#gene-entry").keyup(function (e) {
     if (e.keyCode == 13) {
+      $("#spinner").css('display', 'block');
       var geneAcronym = $('#gene-entry').val().toUpperCase();
       var exprVals = abaApi.getExpressionData(geneAcronym, parseExpressionData);
     }
@@ -158,7 +160,7 @@ function buildExpressionCloud(exprVals, coordinates) {
 
   scene.add(brain);
   console.log(brain);
-
+  $("#spinner").css('display', 'none');
   var render = function () {
     requestAnimationFrame(render);
     brain.rotation.y += 0.01;
