@@ -40,6 +40,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browserify');
 
-  grunt.registerTask('default', ['jshint', 'sass', 'browserify', 'watch']);
+  grunt.registerTask('doit', ['jshint', 'sass', 'browserify', 'watch']);
 
 };
