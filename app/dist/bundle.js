@@ -1,20 +1,20 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/*jshint esnext: true */
+
 var _ = require('underscore');
-var promise = require('./promise');
 var RSVP = require('rsvp');
 
 module.exports = {
-
 	corsproxy: 'http://localhost:9292/',
 	base: 'api.brain-map.org',
 	path: '/api/v2/data/query.json',
 
-	getExpressionData: function(geneAcronym, callback) {
+	getExpressionData: function(geneAcronym){
 		var thiz = this;
-		this.requestProbeId(geneAcronym).done(function(data) {
-	    thiz.requestExprVals(data.msg[0].id).done(function(data2) {
-	  		return callback(data2);
-			});
+		return this.requestProbeId(geneAcronym).then(function(data){
+	    return thiz.requestExprVals(data.msg[0].id); // Take the first of the returned probes
+	  }, function(error){
+	  	console.error(error);
 	  });
 	},
 
@@ -26,32 +26,70 @@ module.exports = {
 			"gene[acronym$eq'" + geneAcronym + "']," +
 			"rma::options[only$eq'probes.id']";
 		var url = this.corsproxy + this.base + this.path + queryString;
-		return $.ajax({
-		  url: url
-		});
+		var promise = this.sendXhrReturnPromise(url);
+		return promise;
 	},
 
-	requestExprVals: function(probeId) {
+	requestExprVals: function(probeId){
 		console.log("REQUESTEXPRVALS", probeId);
 		var queryString = "?criteria=" +
 			  "service::human_microarray_expression" +
 				  "[probes$eq" + probeId + "]";
-				  //"[donors$eq15496]";
-				  // "[structures$eq9148]";
+				  // "[donors$eq15496]"; // Specify donor
+				  // "[structures$eq9148]"; // Specify structure
 		var url = this.corsproxy + this.base + this.path + queryString;
-		return $.ajax({
-		  url: url
-		}); 
+		return this.sendXhrReturnPromise(url);
+	},
+
+	sendXhrReturnPromise: function(url){
+		var promise = new Promise(function(resolve, reject){
+			var request = new XMLHttpRequest();
+			request.open('GET', url);
+			request.onload = function(){
+				if (request.status == 200){
+					console.log(JSON.parse(request.response));
+	        resolve(JSON.parse(request.response));
+	      } else {
+	        reject(Error(request.statusText));
+	      }
+			};
+			request.send();
+		});
+		return promise;
 	}
+
 };
-},{"./promise":3,"rsvp":6,"underscore":7}],2:[function(require,module,exports){
+},{"rsvp":5,"underscore":6}],2:[function(require,module,exports){
 var abaApi = require("./abaApi.js");
 var _ = require("underscore");
 var utils = require("./utils");
-var promise = require("./promise");
+//var debug = true;
 
 init();
 render();
+
+(function(){
+  var firstKey = true;
+  //Listen for 'return' in gene-entry field:
+  $("#gene-entry").keyup(function (e) {
+    if (firstKey === true && e.keyCode != (17|91)) {
+      $('#gene-entry').val(String.fromCharCode(e.keyCode));
+    }
+    firstKey = false;
+    if (e.keyCode == 13) {
+      $("#spinner").css('display', 'block');
+      var geneAcronym = $('#gene-entry').val().toUpperCase();
+      var promise = abaApi.getExpressionData(geneAcronym);
+      // setTimeout doesn't pause the current thread?
+      // var timeout = setTimeout(function(){}, 10000);
+      promise.then(function(data){
+        // Why is this.parseExpressionData undefined...?
+        var parsedData = parseExpressionData(data);
+        buildExpressionCloud(parsedData[0], parsedData[1]);
+      });
+    }
+  });
+})();
 
 function init(){
   scene = new THREE.Scene();
@@ -68,7 +106,6 @@ function init(){
   scene.add(camera);
   // Controls:
   controls = new THREE.OrbitControls(camera, renderer.domElement);
-
   addLights();
   //addBrain();
 }
@@ -78,6 +115,9 @@ function render() {
   renderer.render(scene, camera);
 }
 
+/*******************
+/ Scene functions:
+*******************/
 // Lights:
 function addLights(){
   var scale = 10;
@@ -114,12 +154,6 @@ function addBrain(){
   }
 }
 
-// For initial testing...
-// var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-// var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-// var cube = new THREE.Mesh( geometry, material );
-// scene.add( cube );
-
 // Collada Loader for the .dae brain model
 function PinaCollada(modelname, scale) {
   var loader = new THREE.ColladaLoader();
@@ -136,32 +170,18 @@ function PinaCollada(modelname, scale) {
   return localObject;
 }
 
-(function(){
-  var firstKey = true;
-  //Listen for 'return' in gene-entry field:
-  $("#gene-entry").keyup(function (e) {
-    if (firstKey === true && e.keyCode != (17|91)) {
-      $('#gene-entry').val(String.fromCharCode(e.keyCode));
-    }
-    firstKey = false;
-    if (e.keyCode == 13) {
-      $("#spinner").css('display', 'block');
-      var geneAcronym = $('#gene-entry').val().toUpperCase();
-      var exprVals = abaApi.getExpressionData(geneAcronym, parseExpressionData);
-    }
-  });
-})();
-
+/******************************
+/ Expression Values functions:
+******************************/ 
 function parseExpressionData(exprData) {
   console.log("PARSEEXPRESSIONDATA", exprData);
-
   //exprVals.msg.probes[0].expression_level - Expression levels
   //exprVals.msg.samples[x].sample.mri - [x,y,z] coordinates
   var exprVals2 = exprData.msg.probes[0].expression_level;
   var coordinates = _.pluck(exprData.msg.samples, 'sample');
   var coordinates2 = _.pluck(coordinates, 'mri');
   //return new promise([exprVals2, coordinates2], );
-  buildExpressionCloud(exprVals2, coordinates2);
+  return [exprVals2, coordinates2];
 }
 
 function buildExpressionCloud(exprVals, coordinates) {
@@ -205,7 +225,7 @@ function buildExpressionCloud(exprVals, coordinates) {
   var brain = new THREE.PointCloud(brainGeometry, material);
   brain.name = "brain";
 
-  // Remove last brain:
+  // Remove previous brain:
   var selectedObject = scene.getObjectByName("brain");
   scene.remove(selectedObject);
 
@@ -219,16 +239,7 @@ function buildExpressionCloud(exprVals, coordinates) {
   };
   render();
 }
-},{"./abaApi.js":1,"./promise":3,"./utils":4,"underscore":7}],3:[function(require,module,exports){
-module.exports = function(callback){
-	return {
-		callback: callback,
-		done: function() {
-			this.callback();
-		}
-	};
-};
-},{}],4:[function(require,module,exports){
+},{"./abaApi.js":1,"./utils":3,"underscore":6}],3:[function(require,module,exports){
 exports.findMaxMin = function (data) {
 	var min = 1000;
 	var max = 0;
@@ -238,7 +249,7 @@ exports.findMaxMin = function (data) {
 	}
 	return [min, max];
 };
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -298,7 +309,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (process){
 /*!
  * @overview RSVP - a tiny implementation of Promises/A+.
@@ -1973,7 +1984,7 @@ process.umask = function() { return 0; };
 
 
 }).call(this,require('_process'))
-},{"_process":5}],7:[function(require,module,exports){
+},{"_process":4}],6:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors

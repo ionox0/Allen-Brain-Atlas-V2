@@ -11,13 +11,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    watch: {
-      files: ['app/js/*.js', 'app/**/*.scss', 'app/**/*.html'],
-      tasks: ['jshint', 'sass', 'browserify'],
-      options: {
-        livereload: true,
-      },
-    },
     sass: {
       options: {
         sourceMap: true
@@ -33,6 +26,21 @@ module.exports = function(grunt) {
         src: ['app/js/main.js'],
         dest: 'app/dist/bundle.js'
       }
+    },
+    connect: {
+      server: {
+        options: {
+          port: 3001,
+          base: 'app'
+        }
+      }
+    },
+    watch: {
+      files: ['app/js/*.js', 'app/**/*.scss', 'app/**/*.html'],
+      tasks: ['jshint', 'sass', 'browserify'],
+      options: {
+        livereload: true,
+      },
     }
   });
 
@@ -40,6 +48,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browserify');
 
-  grunt.registerTask('doit', ['jshint', 'sass', 'browserify', 'watch']);
+  grunt.registerTask('default', ['jshint', 'sass', 'browserify', 'connect', 'watch']);
 
 };

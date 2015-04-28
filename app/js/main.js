@@ -1,10 +1,30 @@
 var abaApi = require("./abaApi.js");
 var _ = require("underscore");
 var utils = require("./utils");
-var promise = require("./promise");
+//var debug = true;
 
 init();
 render();
+
+(function(){
+  var firstKey = true;
+  //Listen for 'return' in gene-entry field:
+  $("#gene-entry").keyup(function (e) {
+    if (firstKey === true && e.keyCode != (17|91)) {
+      $('#gene-entry').val(String.fromCharCode(e.keyCode));
+    }
+    firstKey = false;
+    if (e.keyCode == 13) {
+      $("#spinner").css('display', 'block');
+      var geneAcronym = $('#gene-entry').val().toUpperCase();
+      var promise = abaApi.getExpressionData(geneAcronym);
+      promise.then(function(data){
+        var parsedData = parseExpressionData(data);
+        buildExpressionCloud(parsedData[0], parsedData[1]);
+      });
+    }
+  });
+})();
 
 function init(){
   scene = new THREE.Scene();
@@ -21,7 +41,6 @@ function init(){
   scene.add(camera);
   // Controls:
   controls = new THREE.OrbitControls(camera, renderer.domElement);
-
   addLights();
   //addBrain();
 }
@@ -31,6 +50,9 @@ function render() {
   renderer.render(scene, camera);
 }
 
+/*******************
+/ Scene functions:
+*******************/
 // Lights:
 function addLights(){
   var scale = 10;
@@ -67,12 +89,6 @@ function addBrain(){
   }
 }
 
-// For initial testing...
-// var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-// var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-// var cube = new THREE.Mesh( geometry, material );
-// scene.add( cube );
-
 // Collada Loader for the .dae brain model
 function PinaCollada(modelname, scale) {
   var loader = new THREE.ColladaLoader();
@@ -89,32 +105,18 @@ function PinaCollada(modelname, scale) {
   return localObject;
 }
 
-(function(){
-  var firstKey = true;
-  //Listen for 'return' in gene-entry field:
-  $("#gene-entry").keyup(function (e) {
-    if (firstKey === true && e.keyCode != (17|91)) {
-      $('#gene-entry').val(String.fromCharCode(e.keyCode));
-    }
-    firstKey = false;
-    if (e.keyCode == 13) {
-      $("#spinner").css('display', 'block');
-      var geneAcronym = $('#gene-entry').val().toUpperCase();
-      var exprVals = abaApi.getExpressionData(geneAcronym, parseExpressionData);
-    }
-  });
-})();
-
+/******************************
+/ Expression Values functions:
+******************************/ 
 function parseExpressionData(exprData) {
   console.log("PARSEEXPRESSIONDATA", exprData);
-
   //exprVals.msg.probes[0].expression_level - Expression levels
   //exprVals.msg.samples[x].sample.mri - [x,y,z] coordinates
   var exprVals2 = exprData.msg.probes[0].expression_level;
   var coordinates = _.pluck(exprData.msg.samples, 'sample');
   var coordinates2 = _.pluck(coordinates, 'mri');
   //return new promise([exprVals2, coordinates2], );
-  buildExpressionCloud(exprVals2, coordinates2);
+  return [exprVals2, coordinates2];
 }
 
 function buildExpressionCloud(exprVals, coordinates) {
@@ -158,7 +160,7 @@ function buildExpressionCloud(exprVals, coordinates) {
   var brain = new THREE.PointCloud(brainGeometry, material);
   brain.name = "brain";
 
-  // Remove last brain:
+  // Remove previous brain:
   var selectedObject = scene.getObjectByName("brain");
   scene.remove(selectedObject);
 

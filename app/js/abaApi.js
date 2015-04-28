@@ -1,19 +1,19 @@
+/*jshint esnext: true */
+
 var _ = require('underscore');
-var promise = require('./promise');
 var RSVP = require('rsvp');
 
 module.exports = {
-
 	corsproxy: 'http://localhost:9292/',
 	base: 'api.brain-map.org',
 	path: '/api/v2/data/query.json',
 
-	getExpressionData: function(geneAcronym, callback) {
+	getExpressionData: function(geneAcronym){
 		var thiz = this;
-		this.requestProbeId(geneAcronym).done(function(data) {
-	    thiz.requestExprVals(data.msg[0].id).done(function(data2) {
-	  		return callback(data2);
-			});
+		return this.requestProbeId(geneAcronym).then(function(data){
+	    return thiz.requestExprVals(data.msg[0].id); // Take the first of the returned probes
+	  }, function(error){
+	  	console.error(error);
 	  });
 	},
 
@@ -25,21 +25,36 @@ module.exports = {
 			"gene[acronym$eq'" + geneAcronym + "']," +
 			"rma::options[only$eq'probes.id']";
 		var url = this.corsproxy + this.base + this.path + queryString;
-		return $.ajax({
-		  url: url
-		});
+		var promise = this.sendXhrReturnPromise(url);
+		return promise;
 	},
 
-	requestExprVals: function(probeId) {
+	requestExprVals: function(probeId){
 		console.log("REQUESTEXPRVALS", probeId);
 		var queryString = "?criteria=" +
 			  "service::human_microarray_expression" +
 				  "[probes$eq" + probeId + "]";
-				  //"[donors$eq15496]";
-				  // "[structures$eq9148]";
+				  // "[donors$eq15496]"; // Specify donor
+				  // "[structures$eq9148]"; // Specify structure
 		var url = this.corsproxy + this.base + this.path + queryString;
-		return $.ajax({
-		  url: url
-		}); 
+		return this.sendXhrReturnPromise(url);
+	},
+
+	sendXhrReturnPromise: function(url){
+		var promise = new Promise(function(resolve, reject){
+			var request = new XMLHttpRequest();
+			request.open('GET', url);
+			request.onload = function(){
+				if (request.status == 200){
+					console.log(JSON.parse(request.response));
+	        resolve(JSON.parse(request.response));
+	      } else {
+	        reject(Error(request.statusText));
+	      }
+			};
+			request.send();
+		});
+		return promise;
 	}
+
 };
