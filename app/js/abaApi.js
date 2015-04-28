@@ -46,7 +46,6 @@ module.exports = {
 			request.open('GET', url);
 			request.onload = function(){
 				if (request.status == 200){
-					console.log(JSON.parse(request.response));
 	        resolve(JSON.parse(request.response));
 	      } else {
 	        reject(Error(request.statusText));
