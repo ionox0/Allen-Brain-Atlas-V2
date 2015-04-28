@@ -1,4 +1,6 @@
 node_modules
 /.idea/
 Allen-Brain-Atlas-V2.iml
+/app/dist/
+/app/js/vendor/
 
