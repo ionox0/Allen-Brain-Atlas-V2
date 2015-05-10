@@ -24,7 +24,7 @@ module.exports = {
 			"products[abbreviation$eq'HumanMA']," +
 			"gene[acronym$eq'" + geneAcronym + "']," +
 			"rma::options[only$eq'probes.id']";
-		var url = 'http://' this.base + this.path + queryString;
+		var url = 'http://' + this.base + this.path + queryString;
 		var promise = this.sendXhrReturnPromise(url);
 		return promise;
 	},
