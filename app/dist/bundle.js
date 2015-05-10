@@ -25,7 +25,7 @@ module.exports = {
 			"products[abbreviation$eq'HumanMA']," +
 			"gene[acronym$eq'" + geneAcronym + "']," +
 			"rma::options[only$eq'probes.id']";
-		var url = this.corsproxy + this.base + this.path + queryString;
+		var url = 'http://' + this.base + this.path + queryString;
 		return $.ajax({
 		  url: url
 		});
@@ -38,12 +38,13 @@ module.exports = {
 				  "[probes$eq" + probeId + "]";
 				  //"[donors$eq15496]";
 				  // "[structures$eq9148]";
-		var url = this.corsproxy + this.base + this.path + queryString;
+		var url = 'http://' + this.base + this.path + queryString;
 		return $.ajax({
 		  url: url
 		}); 
 	}
 };
+
 },{"./promise":3,"rsvp":6,"underscore":7}],2:[function(require,module,exports){
 var abaApi = require("./abaApi.js");
 var _ = require("underscore");
