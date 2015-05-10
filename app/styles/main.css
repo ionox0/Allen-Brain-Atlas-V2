@@ -1,6 +1,11 @@
 body {
   margin: 0; }
 
+iframe {
+  position: fixed;
+  bottom: 0px;
+  right: 0px; }
+
 #main {
   position: relative;
   width: 100%;
