@@ -4,9 +4,11 @@ body {
 iframe {
   position: fixed;
   bottom: 0px;
-  right: 0px; }
+  right: 0px;
+  height: 200px; }
 
 #main {
+  text-align: center;
   position: relative;
   width: 100%;
   height: 100%; }
@@ -14,11 +16,11 @@ iframe {
     width: 100%;
     height: 100%; }
   #main a {
+    font-family: "Lucida Console", Monaco, monospace;
     position: absolute;
     left: 3%;
     top: 5%;
     color: grey;
-    font-family: "Lucida Console", Monaco, monospace;
     text-decoration: none; }
   #main #gene-entry {
     font-family: "Lucida Console", Monaco, monospace;
@@ -26,5 +28,18 @@ iframe {
     width: 150px;
     left: 3%;
     top: 10%; }
+  #main #z-score-rainbow {
+    font-family: "Lucida Console", Monaco, monospace;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    height: 20px;
+    width: 300px;
+    background: transparent linear-gradient(to right, #F00, #FFA500, #FF0, #008000, #00F, #4B0082, #EE82EE) repeat scroll 0% 0%;
+    /* Override with better rainbow gradient in Webkit */ }
+    #main #z-score-rainbow > .webkit {
+      width: 100%;
+      height: 100%;
+      background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0%, red), color-stop(20%, yellow), color-stop(40%, lime), color-stop(60%, cyan), color-stop(80%, blue), color-stop(100%, magenta)); }
 
 /*# sourceMappingURL=main.css.map */
