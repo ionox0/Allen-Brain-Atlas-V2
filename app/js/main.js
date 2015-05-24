@@ -13,8 +13,7 @@ var expressionValuesFunctions = require('./ExpressionValuesFunctions');
     if (e.keyCode == 13) {
       $('#spinner').css('display', 'block');
       var geneAcronym = $('#gene-entry').val().toUpperCase();
-      var promise = abaApi.getExpressionData(geneAcronym);
-      promise.then(function(data){
+      abaApi.getExpressionData(geneAcronym).then(function(data){
         var parsedData = expressionValuesFunctions.parseExpressionData(data);
         expressionValuesFunctions.buildExpressionCloud(parsedData[0], parsedData[1]);
       });

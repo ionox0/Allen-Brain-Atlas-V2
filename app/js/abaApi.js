@@ -5,7 +5,7 @@ var RSVP = require('rsvp');
 
 module.exports = {
 	corsproxy: 'http://localhost:9292/',
-	base: 'api.brain-map.org',
+	base: 'http://api.brain-map.org',
 	path: '/api/v2/data/query.json',
 
 	getExpressionData: function(geneAcronym){
@@ -24,9 +24,8 @@ module.exports = {
 			"products[abbreviation$eq'HumanMA']," +
 			"gene[acronym$eq'" + geneAcronym + "']," +
 			"rma::options[only$eq'probes.id']";
-		var url = 'http://' + this.base + this.path + queryString;
-		var promise = this.sendXhrReturnPromise(url);
-		return promise;
+		var url = this.base + this.path + queryString;
+		return this.sendXhrReturnPromise(url);
 	},
 
 	requestExprVals: function(probeId){
@@ -36,7 +35,7 @@ module.exports = {
 				  "[probes$eq" + probeId + "]";
 				  // "[donors$eq15496]"; // Specify donor
 				  // "[structures$eq9148]"; // Specify structure
-		var url = 'http://' + this.base + this.path + queryString;
+		var url = this.base + this.path + queryString;
 		return this.sendXhrReturnPromise(url);
 	},
 
