@@ -40,6 +40,6 @@ iframe {
     #main #z-score-rainbow > .webkit {
       width: 100%;
       height: 100%;
-      background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0%, red), color-stop(20%, yellow), color-stop(40%, lime), color-stop(60%, cyan), color-stop(80%, blue), color-stop(100%, magenta)); }
+      background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #ff0000), color-stop(20%, #ffff00), color-stop(40%, #00ff00), color-stop(60%, #00ffff), color-stop(80%, #0000ff), color-stop(100%, #ff00ff)); }
 
 /*# sourceMappingURL=main.css.map */
