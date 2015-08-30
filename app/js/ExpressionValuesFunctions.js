@@ -35,7 +35,7 @@ module.exports.buildExpressionCloud = function(exprVals, coordinates) {
   }
 
   var material = new THREE.PointCloudMaterial({
-    size: 10,
+    size: 1,
     blending: THREE.AdditiveBlending,
     transparent: true,
     opacity: 0.7,
