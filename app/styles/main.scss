@@ -39,6 +39,10 @@ iframe {
     top: 10%;
   }
 
+  #spinner {
+    margin-top: 120px;
+  }  
+
   #z-score-rainbow {
     @include font;
     position: fixed;

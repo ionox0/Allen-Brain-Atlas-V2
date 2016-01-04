@@ -28,6 +28,8 @@ iframe {
     width: 150px;
     left: 3%;
     top: 10%; }
+  #main #spinner {
+    margin-top: 120px; }
   #main #z-score-rainbow {
     font-family: "Lucida Console", Monaco, monospace;
     position: fixed;
