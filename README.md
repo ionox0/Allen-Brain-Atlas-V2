@@ -7,10 +7,10 @@ Enter a gene symbol from this page to see normalized expression values:
 
 Red-Violet scale represents the z-score expression values for the selected gene, with red indicating lower expression values, and violet higher
 
-###[View live](http://brain.ianjohnson.co)
+### [View live](http://brain.ianjohnson.co)
 
-###Build
+### Build
 1. clone repo
 2. grunt 
 
-######[Allen Institute for Brain Science, Seattle, WA](http://www.brain-map.org/)
+###### [Allen Institute for Brain Science, Seattle, WA](http://www.brain-map.org/)
